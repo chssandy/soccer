@@ -37,15 +37,15 @@
 		<property name="dataSource" ref="dataSource" />
 		<!-- typeAliasesPackage 为这个包下面的所有类生成别名，在配置文件中就可以直接用类名进行引用，而不用写全路径 -->
 		<property name="typeAliasesPackage" value="com.soccer.pojo,com.soccer.search" />
-		<property name="mapperLocations" value="classpath*:config/mybatis*/**/*.xml" />
+		<property name="mapperLocations" value="classpath*:config/mybatis*/*.xml" />
 	</bean>
 	
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <!-- 指定Mapper.java的位置 -->
+<!-- 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        指定Mapper.java的位置
         <property name="basePackage" value="com.soccer.dao" />
-        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
-
+ -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 		<!-- 如果想要进行批量操作可加入这个属性 -->

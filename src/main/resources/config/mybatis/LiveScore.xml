@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soccer.mybatis.livescore">
+	<select id="getList" parameterType="LiveScoreSearch" resultType="LiveScoreBean">
+        SELECT
+        	id,
+			league_name,
+			event_time,
+			status,
+			home_team,
+			score,
+			away_team,
+			half_score,
+			asian_plate,
+			size,
+			full_details,
+			half_time_details,
+			page_url,
+			is_resolved
+
+        FROM 
+        	live_score 
+        where
+				is_resolved = #{is_resolved} 
+	    ORDER BY id asc
+		<if test="havePage == 1">
+			LIMIT #{start}, #{rows}
+		</if>
+	</select>
+	
+	<select id="getCount" parameterType="LiveScoreSearch" resultType="int">
+		 SELECT COUNT(1)
+        FROM 
+        	live_score
+        where
+			is_resolved = #{is_resolved} 
+	</select>
+	
+	<update id="resolveLiveScore" parameterType="LiveScoreBean">
+		update live_score set 
+			is_resolved = #{is_resolved}
+		where id = #{id}
+	</update>
+    
+</mapper>
