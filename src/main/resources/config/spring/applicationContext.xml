@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
 	<!-- 加载配置文件 -->
-	<bean id="propertyConfigurer" class="com.hmrz.common.sys.PropertyConfigurer">
+	<bean id="propertyConfigurer" class="com.soccer.common.sys.PropertyConfigurer">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
@@ -43,7 +43,6 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 指定Mapper.java的位置 -->
         <property name="basePackage" value="com.soccer.dao" />
-        <property name="markerInterface" value="com.soccer.common.BaseDao" />
         <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
     </bean>
 
@@ -61,20 +60,6 @@
 	<!-- 使用annotation定义事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<task:annotation-driven />
-	<!-- memcached -->
-	<bean id="mem_server1" class="java.net.InetSocketAddress">
-		<constructor-arg>
-			<value>${memcached.server_ip}</value>
-		</constructor-arg>
-		<constructor-arg>
-			<value>${memcached.server_port}</value>
-		</constructor-arg>
-	</bean>
-
-	
-	<!-- Use factory bean to build memcached client -->
-	<bean name="memcachedClient" factory-bean="memcachedClientBuilder" factory-method="build" destroy-method="shutdown" />
-
 	<!-- 异常处理 -->
 	<bean id="exceptionResolver" class="com.soccer.common.exception.ResolveException">
 		<property name="defaultStatusCode" value="500" />

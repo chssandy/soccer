@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soccer.mybatis.matchInfo">
+	<select id="getList" parameterType="MatchInfoSearch" resultType="MatchInfoBean">
+        SELECT
+        	id,
+			realid,
+			t,
+			s,
+			x,
+			y,
+			q,
+			su,
+			av,
+			attribute
+        FROM 
+        	data_collection 
+        WHERE
+            attribute = 0
+	    ORDER BY id desc
+		<if test="havePage == 1">
+			LIMIT #{start}, #{rows}
+		</if>
+	</select>
+	
+	<select id="getCount" parameterType="MatchInfoSearch" resultType="int">
+		 SELECT COUNT(1)
+        FROM 
+        	data_collection 
+        WHERE
+            attribute = 0
+	    ORDER BY id desc
+	</select>
+    
+</mapper>
