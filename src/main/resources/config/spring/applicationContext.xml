@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+
+	<!-- 加载配置文件 -->
+	<bean id="propertyConfigurer" class="com.hmrz.common.sys.PropertyConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<!-- 开发环境 -->
+				<value>classpath:config/database/database.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 数据库连接池配置 -->
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="driverClassName" value="${mysql.driverClassName}" />
+		<property name="url" value="${mysql.url}" />
+		<property name="username" value="${mysql.user}" />
+		<property name="password" value="${mysql.password}" />
+		<property name="initialSize" value="${mysql.initialSize}" />
+		<property name="maxIdle" value="${mysql.maxIdle}" />
+		<property name="maxActive" value="${mysql.maxActive}" />
+		<property name="minIdle" value="${mysql.minIdle}" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- typeAliasesPackage 为这个包下面的所有类生成别名，在配置文件中就可以直接用类名进行引用，而不用写全路径 -->
+		<property name="typeAliasesPackage" value="com.soccer.pojo,com.soccer.search" />
+		<property name="mapperLocations" value="classpath*:config/mybatis*/**/*.xml" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定Mapper.java的位置 -->
+        <property name="basePackage" value="com.soccer.dao" />
+        <property name="markerInterface" value="com.soccer.common.BaseDao" />
+        <!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
+    </bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<!-- 如果想要进行批量操作可加入这个属性 -->
+		<!-- <constructor-arg index="1" value="BATCH" /> -->
+	</bean>
+
+	<!-- 设定transactionManager -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<task:annotation-driven />
+	<!-- memcached -->
+	<bean id="mem_server1" class="java.net.InetSocketAddress">
+		<constructor-arg>
+			<value>${memcached.server_ip}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${memcached.server_port}</value>
+		</constructor-arg>
+	</bean>
+
+	
+	<!-- Use factory bean to build memcached client -->
+	<bean name="memcachedClient" factory-bean="memcachedClientBuilder" factory-method="build" destroy-method="shutdown" />
+
+	<!-- 异常处理 -->
+	<bean id="exceptionResolver" class="com.soccer.common.exception.ResolveException">
+		<property name="defaultStatusCode" value="500" />
+		<property name="warnLogCategory" value="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" />
+	</bean>
+
+	<!-- 启动包扫描功能，根据下面配置的路径扫描包成为spring的bean -->
+	<context:component-scan base-package="com.soccer" use-default-filters="false">
+		<context:include-filter type="regex" expression="com.soccer.common.BaseController" />
+		<context:include-filter type="regex" expression="com.soccer.pojo.*" />
+		<context:include-filter type="regex" expression="com.soccer.search.*" />
+		<context:include-filter type="regex" expression="com.soccer.action.*" />
+		<context:include-filter type="regex" expression="com.soccer.dao.impl.*" />
+		<context:include-filter type="regex" expression="com.soccer.service.impl.*" />
+		
+	</context:component-scan>
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="10" />
+		<!-- 最大线程数 -->
+		<property name="maxPoolSize" value="100" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<property name="queueCapacity" value="25" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 ThreadPoolExecutor.CallerRunsPolicy策略 ,调用者的线程会执行该任务,如果执行器已关闭,则丢弃. -->
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean>
+
+</beans>
