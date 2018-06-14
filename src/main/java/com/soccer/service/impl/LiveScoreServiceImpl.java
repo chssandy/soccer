@@ -8,6 +8,7 @@ package com.soccer.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.soccer.common.exception.SysException;
 import com.soccer.common.utils.HtmlParserUtil;
@@ -40,6 +41,7 @@ public class LiveScoreServiceImpl implements LiveScoreService{
 	}
 
 	@Override
+	@Transactional(rollbackFor = SysException.class)
 	public void washData(LiveScoreSearch search) throws SysException {
 		List<LiveScoreBean> list = liveScoreDao.getList(search);
 		for(LiveScoreBean liveScoreBean : list){

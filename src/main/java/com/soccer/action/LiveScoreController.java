@@ -56,6 +56,8 @@ public class LiveScoreController extends BaseController
     public Map<String, Object> WashData(LiveScoreSearch search) throws SysException
     {
     	search.setPage(1);
+    	search.setHavePage(1);
+    	search.setRows(200);
     	search.setIs_resolved(0);
     	liveScoreService.washData(search);
         return buildResult();
