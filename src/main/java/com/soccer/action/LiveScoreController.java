@@ -57,7 +57,7 @@ public class LiveScoreController extends BaseController
     {
     	search.setPage(1);
     	search.setHavePage(1);
-    	search.setRows(200);
+    	search.setRows(100);
     	search.setIs_resolved(0);
     	liveScoreService.washData(search);
         return buildResult();

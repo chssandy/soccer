@@ -74,6 +74,7 @@
 		<context:include-filter type="regex" expression="com.soccer.action.*" />
 		<context:include-filter type="regex" expression="com.soccer.dao.impl.*" />
 		<context:include-filter type="regex" expression="com.soccer.service.impl.*" />
+		<context:include-filter type="regex" expression="com.soccer.common.task.SpringTask" />
 		
 	</context:component-scan>
 	
