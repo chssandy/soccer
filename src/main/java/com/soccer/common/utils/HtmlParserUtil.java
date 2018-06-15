@@ -50,9 +50,14 @@ public final class HtmlParserUtil
     			        	if(StringUtils.isEmpty(td.text())){
     			        		bean.setT("-1");
     			        	}else{
-	    			        	if(Float.parseFloat(td.text())>= 61)
-	    			        		bean.setAttribute("1");
-	    			        	bean.setT(td.text());
+	    			        	try{
+	    			        		if(Float.parseFloat(td.text())>= 61)
+	    			        			bean.setAttribute("1");
+		    			        	bean.setT(td.text());
+	    			        	}catch(NumberFormatException e){
+	    			        		break;
+	    			        	}
+	    			        		
     			        	}
     			            break;
     			        case 2:
