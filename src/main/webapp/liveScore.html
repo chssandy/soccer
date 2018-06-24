@@ -33,9 +33,53 @@
     <script type="text/javascript" src="resource/js/jquery.json.min.js"></script>
     <script src="resource/plugins/jqGrid/js/jquery.jqGrid.min.js"></script>
     <script src="resource/plugins/jqGrid/js/i18n/grid.locale-cn.js"></script>
+    <script src="resource/js/bootstrap-datepicker.min.js"></script>
 </head>
 <body>
 <div class="row">
+	<div style="margin-bottom: 10px;" class="form-horizontal">
+		<div class="col-xs-2 ">
+                <label class="col-xs-2 control-label no-padding-right"> 日期: </label>
+                <div class="col-xs-7  input-group " id="date">
+                    <input type="text" id="event_date" class="span4 col-sm-12 date-picker" readonly="readonly" data-date-format="yyyy-mm-dd">
+                    <span class="input-group-addon add-on">
+						<i data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></i>
+					</span>
+                </div>
+            </div>
+         <div class="col-xs-2" id="acct-password-row" style="float: left;">
+			<div class="form-group">
+				<label for="home_team" class="col-sm-3 control-label no-padding-right"> 主场球队 </label>
+				<div class="col-sm-9">
+					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="主场球队 " name="home_team" id="home_team">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-2" id="acct-password-row" style="float: left;">
+			<div class="form-group">
+				<label for="away_team" class="col-sm-3 control-label no-padding-right"> 客场球队 </label>
+				<div class="col-sm-9">
+					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="客场球队" name="away_team" id="away_team">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-2" id="acct-password-row" style="float: left;">
+			<div class="form-group">
+				<label for="league_name" class="col-sm-3 control-label no-padding-right"> 联赛 </label>
+				<div class="col-sm-9">
+					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="联赛" name="league_name" id="league_name">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-header" style="margin-bottom: 40px">
+		<h1>
+			<span class="header_button_span " >
+				<button class="btn btn-primary" id="search-button">查询</button>&nbsp;&nbsp;
+			</span>
+		</h1>
+	</div>
+	
 	<div class="col-xs-12">
 		<table id="tables"></table>
 		<div id="pager"></div>
@@ -43,8 +87,23 @@
 </div>
   
  <script type="text/javascript">
-        (function() {
+ 	var publicParams = [];
+	function params(a) {
+        return a ? (publicParams.length = 0, publicParams.push(a), void 0) : publicParams.pop();
+    }
+    
+   function show(type,obj) {
+		window.open(WEB_URL+'/details.html?type='+type+'&id='+obj,'_self') 
+	}
+   (function() {
+   
 			pageInit();
+			
+			$('#event_date').datepicker({
+		        autoclose: true,
+		        todayBtn: true,
+		        clearBtn: true
+		    })
 	
 			function pageInit() {
 				$("#tables").jqGrid({
@@ -143,20 +202,30 @@
 			}
 			
 			function initOperator(cellvalue, options, rowObject) {
-				var op = '<div title="全场详情" style="float:left;cursor:pointer;" onclick="show(0,' + rowObject.full_details + ');" class="ui-pg-div ui-inline-edit"><span >全场详情</span></div>' 
-					   + '<div title="半场详情" onclick="show(1,' + rowObject.half_time_details + ');" style="float:left;margin-left:5px;" class="ui-pg-div ui-inline-del"><span>半球详情</span></div>';
+				var op = '<div title="全场详情" style="float:left;cursor:pointer;" onclick="show(0,' + rowObject.id + ');" class="ui-pg-div ui-inline-edit"><span >全场详情</span></div>' 
+					   + '<div title="半场详情" onclick="show(1,' + rowObject.id + ');" style="float:left;margin-left:5px;" class="ui-pg-div ui-inline-del"><span>半球详情</span></div>';
 				return op;
 			}
-			function show(type,obj) {
-				dialog({
-					title: type==0 ? '全场详情' : '半场详情',
-					content: obj,
-					ok: function() {},
-					cancel: false
-				}).showModal();
-			}
+			
+		  $('#search-button').click(function () {
+		    	var data = {
+		    			event_date: $.trim($('#event_date').val()),
+		                league_name: $.trim($('#league_name').val()),
+		                home_team: $.trim($('#home_team').val()),
+		                away_team: $.trim($('#away_team').val())
+		    	};
+		        $("#tables").setGridParam({
+		            postData: data,
+		            page: 1
+		        }).trigger("reloadGrid");
+		    })
+		    
+	    
+			
 	})($);
-
+	
+	
+	
     </script>
 </body>
 </html>

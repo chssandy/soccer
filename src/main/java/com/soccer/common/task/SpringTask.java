@@ -55,19 +55,19 @@ public class SpringTask
     
     
     /**
-     * 每隔一小时更新任务状态
+     * 每隔一分钟更新任务状态
      * @throws JohnMediaException
      */
     @Scheduled(cron = "0 0/1 * * * ?")
     public void fixTaskStatus() throws SysException
     {
-    	System.out.println("=========================================================================================");
-    	LiveScoreSearch search = new LiveScoreSearch();
-    	search.setPage(1);
-    	search.setHavePage(1);
-    	search.setRows(1);
-    	search.setIs_resolved(0);
-    	liveScoreService.washData(search);
+//    	System.out.println("=========================================================================================");
+//    	LiveScoreSearch search = new LiveScoreSearch();
+//    	search.setPage(1);
+//    	search.setHavePage(1);
+//    	search.setRows(100);
+//    	search.setIs_resolved(0);
+//    	liveScoreService.washData(search);
     }
     
 }

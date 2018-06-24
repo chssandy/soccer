@@ -1,7 +1,7 @@
 //var SERVER_URL = "http://manager.91xianxia.com";
 //var WEB_URL = "http://manager.91xianxia.com";
-var SERVER_URL = "http://www.xianxia.com:8080/soccer";
-var WEB_URL = "http://www.xianxia.com:8080/soccer";
+var SERVER_URL = "http://www.soccer.com:8080/soccer";
+var WEB_URL = "http://www.soccer.com:8080/soccer";
 
 (function($) {
 
@@ -31,8 +31,7 @@ var WEB_URL = "http://www.xianxia.com:8080/soccer";
         fn.error(XMLHttpRequest, textStatus, errorThrown);
       },
       success: function(msg, textStatus) {
-        if (this.url.indexOf('www.xianxia.com') > 0) {
-          // if (this.url.indexOf('admin.91xianxia.com') > 0) {
+        if (this.url.indexOf('www.soccer.com') > 0) {
           if (msg == undefined) {
             location.href = "./404.html";
             return false;
@@ -229,7 +228,76 @@ $.fn.toggler = function(fn, fn2) {
 
 (function($,w) {
 	"use strict";
+	
 	 
+    var biz = biz || {};
+    
+    biz.loadPage = function(url,params,isNew){
+    	if(!$.isEmptyObject(params))
+    		url = String(url)+"?"+$.param(params);
+    	isNew ? w.open(url) : w.location.href = url;
+    }
+    
+    biz.getParams = function(key){
+		var s = (w.location.search || "").slice(1),params = {};
+		s && (params = $.deparam(s));
+		return !!key ? params[key] : params;
+	}
+	
+	w.biz =biz;
+	
+	 $.deparam  = function( params, coerce ) {
+		    var obj = {},
+		    	coerce_types = { 'true': !0, 'false': !1, 'null': null },
+		    	decode = w.decodeURIComponent;
+		    $.each( params.replace( /\+/g, ' ' ).split( '&' ), function(j,v){
+		      var param = v.split( '=' ),
+		        key = decode( param[0] ),
+		        val,
+		        cur = obj,
+		        i = 0,
+		        keys = key.split( '][' ),
+		        keys_last = keys.length - 1;
+		      if ( /\[/.test( keys[0] ) && /\]$/.test( keys[ keys_last ] ) ) {
+		        keys[ keys_last ] = keys[ keys_last ].replace( /\]$/, '' );
+		        keys = keys.shift().split('[').concat( keys );
+		        keys_last = keys.length - 1;
+		      } else {
+		        keys_last = 0;
+		      }
+		      if ( param.length === 2 ) {
+		        val = decode( param[1] );
+		        if ( coerce ) {
+		          val = val && !isNaN(val)            ? +val              
+		            : val === 'undefined'             ? undefined         
+		            : coerce_types[val] !== undefined ? coerce_types[val] 
+		            : val;                                                
+		        }
+		        
+		        if ( keys_last ) {
+		          for ( ; i <= keys_last; i++ ) {
+		            key = keys[i] === '' ? cur.length : keys[i];
+		            cur = cur[key] = i < keys_last
+		              ? cur[key] || ( keys[i+1] && isNaN( keys[i+1] ) ? {} : [] )
+		              : val;
+		          }
+		        } else {
+		          if ( $.isArray( obj[key] ) ) {
+		            obj[key].push( val );
+		          } else if ( obj[key] !== undefined ) {
+		            obj[key] = [ obj[key], val ];
+		          } else {
+		            obj[key] = val;
+		          }
+		        }
+		        
+		      } else if ( key ) {
+		        obj[key] = coerce? undefined: '';
+		      }
+		    });
+		    return obj;
+		  };
+	
 	//"{0},{1},hehe".format("hello","world"); //hello,world,hehe
 	  if (!String.prototype.format) {
 	    String.prototype.format = function() {

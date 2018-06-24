@@ -53,4 +53,9 @@ public class LiveScoreServiceImpl implements LiveScoreService{
 		}
 	}
 
+	@Override
+	public LiveScoreBean getLiveScoreById(String id) throws SysException {
+		return liveScoreDao.getLiveScoreById(id);
+	}
+
 }

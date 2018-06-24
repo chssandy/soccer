@@ -7,11 +7,15 @@
  */
 package com.soccer.action;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -39,7 +43,7 @@ public class LiveScoreController extends BaseController
     @ResponseBody
     public Map<String, Object> LiveScore(LiveScoreSearch search) throws SysException
     {
-    	search.setIs_resolved(0);
+    	search.setIs_resolved(1);
     	int count = liveScoreService.getCount(search);
         List<LiveScoreBean> list =null;
         if (count > 0)
@@ -49,6 +53,22 @@ public class LiveScoreController extends BaseController
         return buildResult(doPage(count, list, search));
     }
     
+    //根據比賽id獲取信息
+    @RequestMapping(value = "/live/score/info")
+    @ResponseBody
+    public Map<String, Object> getLiveScoreById(HttpServletRequest request, String id) throws SysException
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isEmpty(id))
+        {
+            map.put("result", "error_input");
+            return buildResult(map);
+        }
+        LiveScoreBean bean = liveScoreService.getLiveScoreById(id);
+        map.put("result", "success");
+        map.put("info", bean);
+        return buildResult(map);
+    }
     
     
     @RequestMapping(value = "/wash/data")

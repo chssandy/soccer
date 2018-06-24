@@ -77,4 +77,18 @@ public class LiveScoreDaoImpl implements LiveScoreDao{
         return affected > 0 ? true : false;
 	}
 
+	@Override
+	public LiveScoreBean getLiveScoreById(String id) throws SysException {
+		try
+        {
+            return sqlSession.selectOne("com.soccer.mybatis.livescore.getLiveScoreById", id);
+        }
+        catch (DataAccessException e)
+        {
+            String msg = "查询比赛信息出错！";
+            log.error(msg, e);
+            throw new SysException(e);
+        }
+	}
+
 }

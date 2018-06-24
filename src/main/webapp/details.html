@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>足球</title>
+    <meta name="keywords" content="足球" />
+    <meta name="description" content="足球" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="resource/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="resource/css/colorbox.css" />
+    <link rel="stylesheet" href="resource/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="resource/css/jquery-ui-1.10.3.full.min.css" />
+    <link rel="stylesheet" href="resource/css/chosen.css" />
+    <link rel="stylesheet" href="resource/css/datepicker.css" />
+    <link rel="stylesheet" href="resource/css/ui.jqgrid.css" />
+    <link rel="stylesheet" href="resource/css/ace.min.css" />
+    <link rel="stylesheet" href="resource/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="resource/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="resource/plugins/validator/jquery.validator.css">
+    <link rel="stylesheet" href="resource/plugins/artDialog/css/ui-dialog.css">
+    <script type="text/javascript" src="resource/js/ace-extra.min.js"></script>
+    <script type="text/javascript" src="resource/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="resource/plugins/validator/jquery.validator.js"></script>
+    <script type="text/javascript" src="resource/plugins/validator/local/zh_CN.min.js"></script>
+    <script type="text/javascript" src="resource/plugins/artDialog/dist/dialog-min.js"></script>
+    <script type="text/javascript" src="resource/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resource/js/typeahead-bs2.min.js"></script>
+    <script type="text/javascript" src="resource/js/ace-elements.min.js"></script>
+    <script type="text/javascript" src="resource/js/ace.min.js"></script>
+    <script type="text/javascript" src="resource/js/common.js"></script>
+    <script type="text/javascript" src="resource/js/jquery.json.min.js"></script>
+    <script src="resource/plugins/jqGrid/js/jquery.jqGrid.min.js"></script>
+    <script src="resource/plugins/jqGrid/js/i18n/grid.locale-cn.js"></script>
+</head>
+<body>
+<div class="row">
+      <div class="col-xs-11">
+            <ul class='nav nav-tabs' >
+               <li class="pull-left">
+                   <button class ="btn btn-primary btn-xs" id="goback">返回列表</button>
+               </li>
+           </ul>
+	</div>	
+	<div class="col-md-12">
+		<div class="widget-box" style=" height:20%;">
+			<div class="widget-body" style="height:100px;">
+				<div class="widget-main form-inline" style="overflow:auto">
+					<p class="muted" >
+						<label class="text-info col-md-1">联赛</label>
+						<label class="text-info col-md-1">赛事时间</label>
+						<label class="text-info col-md-1">状态</label>
+						<label class="text-info col-md-1">主场球队</label>
+						<label class="text-info col-md-1">比分</label>
+						<label class="text-info col-md-1">客场球队</label>
+						<label class="text-info col-md-1">半场</label>
+						<label class="text-info col-md-1">亚盘</label>
+						<label class="text-info col-md-1">大小</label>
+						<label class="text-info col-md-1">数据</label>
+					</p>
+				</div>
+				<div class="widget-main form-inline" style="overflow:auto">
+					<p class="muted" >
+					<label class="text-info col-md-1" id="league_name"></label>
+					<label class="text-info col-md-1" id="event_time"></label>
+					<label class="text-info col-md-1" id="status"></label>
+					<label class="text-info col-md-1" id="home_team"></label>
+					<label class="text-info col-md-1" id="score"></label>
+					<label class="text-info col-md-1" id="away_team"></label>
+					<label class="text-info col-md-1" id="half_score"></label>
+					<label class="text-info col-md-1" id="asian_plate"></label>
+					<label class="text-info col-md-1" id="size"></label>
+					<label class="text-info col-md-1" id="eid"><span>全场</span>&nbsp;&nbsp;&nbsp;<span>半场</span></label>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<table id="tables"></table>
+		<div id="pager"></div>
+	</div>
+	
+	<div style="margin-bottom: 10px;" class="form-horizontal">
+         <div class="col-xs-2" id="acct-password-row" style="float: left;">
+			<div class="form-group">
+				<label for="home_team" class="col-sm-3 control-label no-padding-right"> 大球 </label>
+				<div class="col-sm-9">
+					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="大球 " name="home_team" id="home_team">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-2" id="acct-password-row" style="float: left;">
+			<div class="form-group">
+				<label for="away_team" class="col-sm-3 control-label no-padding-right"> 小球 </label>
+				<div class="col-sm-9">
+					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="小球" name="away_team" id="away_team">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-header" style="margin-bottom: 40px">
+		<h1>
+			<span class="header_button_span " >
+				<button class="btn btn-primary" id="search-button">筛选</button>&nbsp;&nbsp;
+			</span>
+		</h1>
+	</div>
+</div>
+  
+ <script type="text/javascript">
+        (function() {
+        	console.log(biz.getParams("type"));
+        	var type = biz.getParams("type");
+        	var live_score_id = biz.getParams("id");
+        	
+        	$("#goback").click(function () {
+		        window.history.go(-1)
+		    });	
+		    
+		    
+		    $.ajax({
+		        url: SERVER_URL + "/live/score/info",
+		        type: "POST",
+		        data: {
+		            id : live_score_id
+		        },
+		        success: function (result) {
+		            if (result != null) {
+		                if (result.info != null) {
+		                    $("#league_name").text(result.info.league_name);
+		                    $("#event_time").text(result.info.event_time);
+		                    $("#status").text(result.info.status);
+		                    $("#home_team").text(result.info.home_team);
+		                    $("#score").text(result.info.score);
+		                    $("#away_team").text(result.info.away_team);
+		                    $("#half_score").text(result.info.half_score);
+		                    $("#asian_plate").text(result.info.asian_plate);
+		                    $("#size").text(result.info.size);
+		                }
+		            }
+		        }
+		    });
+        	
+			pageInit();
+				
+			function pageInit() {
+				$("#tables").jqGrid({
+					url: SERVER_URL + '/details/info?nd=' + new Date().getTime(),
+					datatype: "json",
+					postData: {
+			            type: type,
+			            live_score_id: live_score_id
+			        },
+					mtype: 'post',
+					colNames: ['实盘ID', '时间', '比分', '大球', '盘口', '小球','水位和值','平均值'],
+					regional: 'cn',
+					colModel: [{
+						name: 'realid',
+						index: 'realid',
+						width: 115,
+						sortable: false
+					}, {
+						name: 't',
+						index: 't',
+						width: 30,
+						sortable: false
+					}, {
+						name: 's',
+						index: 's',
+						width: 85,
+						sortable: false
+					}, {
+						name: 'x',
+						index: 'x',
+						width: 75,
+						sortable: false
+					}, {
+						name: 'q',
+						index: 'q',
+						width: 90,
+						sortable: false
+					}, {
+						name: 'y',
+						index: 'y',
+						width: 90,
+						sortable: false
+					}, {
+						name: 'su',
+						index: 'su',
+						width: 90,
+						sortable: false
+					}, {
+						name: 'av',
+						index: 'av',
+						width: 90,
+						sortable: false
+					}],
+					jsonReader:{
+			            id: "id",//设置返回参数中，表格ID的名字为manager_id
+			            repeatitems : false
+			        },
+					rowNum: 10,
+					rowList: [10, 20, 30],
+					pager: '#pager',
+					viewrecords: true,
+					autowidth: true,
+					shrinkToFit: true,
+					caption: "比赛详情列表",
+					multiselect: true,
+					multiboxonly: true,
+					sortable: false,
+					altRows: true,
+					height: '100%',
+					loadComplete: function() {
+						var table = this;
+						setTimeout(function() {
+							updatePagerIcons(table);
+						}, 0);
+					}
+				});
+				jQuery("#tables").jqGrid('navGrid', "#pager", {
+					edit: false,
+					add: false,
+					del: false
+				});
+			}
+	})($);
+
+    </script>
+</body>
+</html>
+
+

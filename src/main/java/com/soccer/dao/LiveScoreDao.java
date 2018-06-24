@@ -35,6 +35,15 @@ public interface LiveScoreDao {
     List<LiveScoreBean> getList(LiveScoreSearch search) throws SysException;
     
     /**
+     * 查询比赛信息
+     * @param id 查询条件
+     * @return
+     * @throws SysException [参数说明]
+     * @author sandy 2018年05月29日 下午4:19:58
+     */
+    LiveScoreBean getLiveScoreById(String id) throws SysException;
+    
+    /**
      * 确认数据已解析
      * @param bean 要确认的数据
      * @return true：修改成功；false：修改失败

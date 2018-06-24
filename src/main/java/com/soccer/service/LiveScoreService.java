@@ -35,6 +35,15 @@ public interface LiveScoreService {
     List<LiveScoreBean> getList(LiveScoreSearch search) throws SysException;
     
     /**
+     * 查询比赛信息
+     * @param id 查询条件
+     * @return
+     * @throws SysException [参数说明]
+     * @author sandy 2018年05月29日 下午4:19:58
+     */
+    LiveScoreBean getLiveScoreById(String id) throws SysException;
+    
+    /**
      * 解析全场详情和半场详情
      * @param search 查询条件
      * @return

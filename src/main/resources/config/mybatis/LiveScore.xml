@@ -22,7 +22,24 @@
         	live_score 
         where
 				is_resolved = #{is_resolved} 
-	    ORDER BY id asc
+				<choose>
+	    			<when  test="event_date != null and event_date != ''">
+			    	AND event_date = #{event_date}
+			    	</when>
+	     			<otherwise>
+	     			AND event_date = (select event_date from live_score order by id desc limit 0,1)
+     				</otherwise>
+    			</choose>
+		    	<if test="league_name != null and league_name != ''">
+                	AND league_name LIKE CONCAT('%',#{league_name},'%')
+	            </if>
+            	<if test="home_team != null and home_team != ''">
+                	AND home_team LIKE CONCAT('%',#{home_team},'%')
+	            </if>
+            	<if test="away_team != null and away_team != ''">
+                	AND away_team LIKE CONCAT('%',#{away_team},'%')
+	            </if>
+	    ORDER BY id DESC
 		<if test="havePage == 1">
 			LIMIT #{start}, #{rows}
 		</if>
@@ -34,12 +51,54 @@
         	live_score
         where
 			is_resolved = #{is_resolved} 
+			<choose>
+	    			<when  test="event_date != null and event_date != ''">
+			    	AND event_date = #{event_date}
+			    	</when>
+	     			<otherwise>
+	     			AND event_date = (select event_date from live_score order by id desc limit 0,1)
+     				</otherwise>
+    			</choose>
+		    	<if test="league_name != null and league_name != ''">
+                	AND league_name LIKE CONCAT('%',#{league_name},'%')
+	            </if>
+            	<if test="home_team != null and home_team != ''">
+                	AND home_team LIKE CONCAT('%',#{home_team},'%')
+	            </if>
+            	<if test="away_team != null and away_team != ''">
+                	AND away_team LIKE CONCAT('%',#{away_team},'%')
+	            </if>
 	</select>
 	
 	<update id="resolveLiveScore" parameterType="LiveScoreBean">
 		update live_score set 
-			is_resolved = #{is_resolved}
+			is_resolved = #{is_resolved},
+			event_date = CONCAT(SUBSTRING_INDEX(event_time,'年',1),'-',SUBSTRING_INDEX(SUBSTRING_INDEX(event_time,'月',1),'年',-1),'-',
+			 SUBSTRING_INDEX(SUBSTRING_INDEX(event_time,'日',1),'月',-1)),
+			event_timestamp = CONCAT(SUBSTRING_INDEX(event_time,'年',1),'-',SUBSTRING_INDEX(SUBSTRING_INDEX(event_time,'月',1),'年',-1),'-',
+			SUBSTRING_INDEX(SUBSTRING_INDEX(event_time,'日',1),'月',-1),' ',SUBSTRING_INDEX(event_time,'日',-1))
 		where id = #{id}
 	</update>
+	
+	<select id="getLiveScoreById" parameterType="String" resultType="LiveScoreBean">
+    	SELECT
+          	id,
+			league_name,
+			event_time,
+			status,
+			home_team,
+			score,
+			away_team,
+			half_score,
+			asian_plate,
+			size,
+			full_details,
+			half_time_details,
+			page_url,
+			is_resolved
+        FROM live_score
+        WHERE id = #{id}
+    </select>
+    
     
 </mapper>

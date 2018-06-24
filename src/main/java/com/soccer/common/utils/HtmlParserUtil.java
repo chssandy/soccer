@@ -13,6 +13,7 @@ import com.soccer.dao.DetailsDao;
 import com.soccer.dao.LiveScoreDao;
 import com.soccer.pojo.DetailsBean;
 import com.soccer.pojo.LiveScoreBean;
+import com.soccer.search.DetailsSearch;
 import com.soccer.search.LiveScoreSearch;
 
 /**
@@ -31,7 +32,7 @@ public final class HtmlParserUtil
     			bean.setLive_score_id(live_score_id);
     			if("#E9F1FA".equals(tr.attr("bgColor")))
     				continue;
-    			System.out.println(tr);
+//    			System.out.println(tr);
     			Elements tds = tr.children();
     			int i= 0;
     			for(Element td : tds) {
@@ -81,7 +82,7 @@ public final class HtmlParserUtil
     			        	}
     			            break;
 			        }
-    				System.out.println(td.text());
+//    				System.out.println(td.text());
     			}
     			switch (type) {
 					case "full":
@@ -105,7 +106,7 @@ public final class HtmlParserUtil
 	}  
     
     
-    public static void main(String[] args){
+/*    public static void main(String[] args){
     	LiveScoreDao liveScoreDao = new LiveScoreDao() {
 			
 			@Override
@@ -125,6 +126,12 @@ public final class HtmlParserUtil
 				// TODO Auto-generated method stub
 				return 0;
 			}
+
+			@Override
+			public LiveScoreBean getLiveScoreById(String id) throws SysException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 		
 		DetailsDao detailsDao = new DetailsDao() {
@@ -140,6 +147,18 @@ public final class HtmlParserUtil
 				// TODO Auto-generated method stub
 				return 0;
 			}
+
+			@Override
+			public int getDetailsCount(DetailsSearch search) throws SysException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public List<DetailsBean> getDetailsList(DetailsSearch search) throws SysException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
     	String ss ="<TABLE cellSpacing=1 cellPadding=0 width=450 align=center bgColor=#AFC7E2 border=0 class=font13>"
     				+"<TR align=center bgColor=#E9F1FA height=22>"
@@ -154,6 +173,6 @@ public final class HtmlParserUtil
     				+"</TR>"
     				+"</TABLE>";
     	parser("1",ss,"full",liveScoreDao,detailsDao);
-    }
+    }*/
     
 }

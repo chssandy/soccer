@@ -79,5 +79,174 @@
 			is_resolved = #{is_resolved} 
 	    ORDER BY id desc
 	</select>
+	
+	
+	
+	<select id="getFullDetailsList" parameterType="DetailsSearch" resultType="DetailsBean">
+        SELECT
+        	f.id,
+			f.realid,
+			f.t,
+			f.s,
+			f.x,
+			f.y,
+			f.q,
+			f.su,
+			f.av,
+			f.attribute
+        FROM 
+	    	full_details f
+        WHERE
+        	f.live_score_id = #{live_score_id}
+            AND f.attribute = 0
+        Union
+        select 
+        	fd.id,
+			fd.realid,
+			fd.t,
+			fd.s,
+			fd.x,
+			fd.y,
+			fd.q,
+			fd.su,
+			fd.av,
+			fd.attribute from half_time_details fd
+   		inner join
+        (SELECT  realid,su,max(a)
+		FROM
+		(SELECT realid,su,count(1) as a FROM full_details WHERE live_score_id = #{live_score_id}
+            AND attribute = 0  GROUP BY realid,su ) AS T
+		 GROUP BY T.realid) as TT
+		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		
+	    ORDER BY t desc
+		<if test="havePage == 1">
+			LIMIT #{start}, #{rows}
+		</if>
+	</select>
+	
+	<select id="getFullDetailsCount" parameterType="DetailsSearch" resultType="int">
+		select count(1) FROM
+		(SELECT
+        	f.id,
+			f.realid,
+			f.t,
+			f.s,
+			f.x,
+			f.y,
+			f.q,
+			f.su,
+			f.av,
+			f.attribute
+        FROM 
+	    	full_details f
+        WHERE
+        	f.live_score_id = #{live_score_id}
+            AND f.attribute = 0
+        Union
+        select 
+        	fd.id,
+			fd.realid,
+			fd.t,
+			fd.s,
+			fd.x,
+			fd.y,
+			fd.q,
+			fd.su,
+			fd.av,
+			fd.attribute from half_time_details fd
+   		inner join
+        (SELECT  realid,su,max(a)
+		FROM
+		(SELECT realid,su,count(1) as a FROM full_details WHERE live_score_id = #{live_score_id}
+            AND attribute = 0  GROUP BY realid,su ) AS T
+		 GROUP BY T.realid) as TT
+		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		) as TTT
+	</select>
+	
+	
+	<select id="getHalfDetailsList" parameterType="DetailsSearch" resultType="DetailsBean">
+        SELECT
+        	f.id,
+			f.realid,
+			f.t,
+			f.s,
+			f.x,
+			f.y,
+			f.q,
+			f.su,
+			f.av,
+			f.attribute
+        FROM 
+	    	half_time_details f
+        WHERE
+        	f.live_score_id = #{live_score_id}
+            AND f.attribute = 0
+        Union
+        select 
+        	fd.id,
+			fd.realid,
+			fd.t,
+			fd.s,
+			fd.x,
+			fd.y,
+			fd.q,
+			fd.su,
+			fd.av,
+			fd.attribute from half_time_details fd
+   		inner join
+        (SELECT  realid,su,max(a)
+		FROM
+		(SELECT realid,su,count(1) as a FROM half_time_details WHERE live_score_id = #{live_score_id}
+            AND attribute = 0  GROUP BY realid,su ) AS T
+		 GROUP BY T.realid) as TT
+		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		
+	    ORDER BY t desc
+		<if test="havePage == 1">
+			LIMIT #{start}, #{rows}
+		</if>
+	</select>
+	
+	<select id="getHalfDetailsCount" parameterType="DetailsSearch" resultType="int">
+		select count(1) FROM
+		(SELECT
+        	f.id,
+			f.realid,
+			f.t,
+			f.s,
+			f.x,
+			f.y,
+			f.q,
+			f.su,
+			f.av,
+			f.attribute
+        FROM 
+	    	half_time_details f
+        WHERE
+        	f.live_score_id = #{live_score_id}
+            AND f.attribute = 0
+        Union
+        select 
+        	fd.id,
+			fd.realid,
+			fd.t,
+			fd.s,
+			fd.x,
+			fd.y,
+			fd.q,
+			fd.su,
+			fd.av,
+			fd.attribute from half_time_details fd
+   		inner join
+        (SELECT  realid,su,max(a)
+		FROM
+		(SELECT realid,su,count(1) as a FROM half_time_details WHERE live_score_id = #{live_score_id}
+            AND attribute = 0  GROUP BY realid,su ) AS T
+		 GROUP BY T.realid) as TT
+		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		) as TTT
+	</select>
     
 </mapper>
