@@ -7,11 +7,14 @@
  */
 package com.soccer.action;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -39,6 +42,21 @@ public class DetailsController extends BaseController
     @ResponseBody
     public Map<String, Object> detailsInfo(DetailsSearch search) throws SysException
     {
+    	List<Map<String, String>> templist = new ArrayList<Map<String,String>>();
+    	
+    	if(!StringUtils.isEmpty(search.getX())&&!StringUtils.isEmpty(search.getY())){
+    		
+    		String[] xArr = search.getX().split(",",-1);
+    		String[] yArr = search.getY().split(",",-1);
+    		for(int i = 0; i< xArr.length; i++){
+    			Map<String, String> map = new HashMap<String, String>();
+    		    map.put("x", xArr[i]);
+    		    map.put("y", yArr[i]);
+    			templist.add(map);
+    		}
+    		search.setTemplist(templist);
+    	}
+    	
     	int count = detailsService.getDetailsCount(search);
         List<DetailsBean> list =null;
         if (count > 0)

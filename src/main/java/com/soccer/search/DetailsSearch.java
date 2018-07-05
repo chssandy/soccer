@@ -5,7 +5,8 @@
  */
 package com.soccer.search;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author chs_sandy
@@ -24,7 +25,35 @@ public class DetailsSearch extends Page {
 	
 	private String su;
 	
-	private HashMap<String, String> xy;
+	private String x;
+	
+	private String y;
+	
+	List<Map<String, String>> templist;
+
+	public List<Map<String, String>> getTemplist() {
+		return templist;
+	}
+
+	public void setTemplist(List<Map<String, String>> templist) {
+		this.templist = templist;
+	}
+
+	public String getX() {
+		return x;
+	}
+
+	public void setX(String x) {
+		this.x = x;
+	}
+
+	public String getY() {
+		return y;
+	}
+
+	public void setY(String y) {
+		this.y = y;
+	}
 
 	public String getType() {
 		return type;
@@ -48,14 +77,6 @@ public class DetailsSearch extends Page {
 
 	public void setSu(String su) {
 		this.su = su;
-	}
-
-	public HashMap<String, String> getXy() {
-		return xy;
-	}
-
-	public void setXy(HashMap<String, String> xy) {
-		this.xy = xy;
 	}
 
 }

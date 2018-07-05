@@ -82,23 +82,18 @@
 		<div id="pager"></div>
 	</div>
 	
-	<div style="margin-bottom: 10px;" class="form-horizontal">
-         <div class="col-xs-2" id="acct-password-row" style="float: left;">
+	<div id="shaixuan" style="margin-bottom: 10px;" class="form-horizontal">
 			<div class="form-group">
-				<label for="home_team" class="col-sm-3 control-label no-padding-right"> 大球 </label>
-				<div class="col-sm-9">
-					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="大球 " name="home_team" id="home_team">
-				</div>
+				<label for="home_team" class="col-sm-1 control-label no-padding-right"> 大球 </label>
+				<input type="text" class="col-xs-2 col-sm-1 span4" placeholder="大球 " name="x" >
+				<label for="away_team" class="col-sm-1 control-label no-padding-right"> 小球 </label>
+				<input type="text" class="col-xs-2 col-sm-1 span4" placeholder="小球" name="y">
+				<span class="col-sm-1">
+					<button class="button button-circle button-tiny" name="add_button"><i class="glyphicon glyphicon-plus" ></i></button>
+					<button class="button button-circle button-tiny" name="del_button"><i class="glyphicon glyphicon-minus" ></i></button>
+				</span> 
 			</div>
-		</div>
-		<div class="col-xs-2" id="acct-password-row" style="float: left;">
-			<div class="form-group">
-				<label for="away_team" class="col-sm-3 control-label no-padding-right"> 小球 </label>
-				<div class="col-sm-9">
-					<input type="text" class="col-xs-10 col-sm-5 span4" placeholder="小球" name="away_team" id="away_team">
-				</div>
-			</div>
-		</div>
+			
 	</div>
 	<div class="page-header" style="margin-bottom: 40px">
 		<h1>
@@ -111,7 +106,6 @@
   
  <script type="text/javascript">
         (function() {
-        	console.log(biz.getParams("type"));
         	var type = biz.getParams("type");
         	var live_score_id = biz.getParams("id");
         	
@@ -142,6 +136,36 @@
 		            }
 		        }
 		    });
+		    
+		    
+		    
+		    $("#shaixuan").on("click","div button[name='add_button']",function(e){
+		    	var p = this.parentNode.parentNode;
+				var pclone = p.cloneNode(true);
+				p.parentNode.appendChild(pclone);
+		    });
+		    
+		    $("#shaixuan").on("click","div button[name='del_button']",function(e){
+		    	if($("#shaixuan").children().length > 1){
+		    		this.parentNode.parentNode.remove();
+		    	}
+		    });
+		    
+		     $('#search-button').click(function () {
+		      var data1 = $("#shaixuan").find("input").serializeObject();
+		      var data = {
+			            type: type,
+			            live_score_id: live_score_id,
+			            x:data1.x.toString(),
+			            y:data1.y.toString()
+			        };
+			  // data = $.extend(data,data1);
+			   console.log(data);
+		        $("#tables").setGridParam({
+		            postData: data,
+		            page: 1
+		        }).trigger("reloadGrid");
+		    })
         	
 			pageInit();
 				

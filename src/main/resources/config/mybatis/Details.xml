@@ -98,7 +98,20 @@
 	    	full_details f
         WHERE
         	f.live_score_id = #{live_score_id}
-            AND f.attribute = 0
+            AND f.attribute = 0 
+            AND f.x &lt; (select IFNULL(min(ffd.x),100000)  from full_details ffd where ffd.t> f.t and ffd.live_score_id = f.live_score_id and ffd.realid = f.realid)
+            <if test="templist != null">
+            <foreach collection="templist" item="item" open=" and (" separator="or" close= ")"  index="index">
+            	(1=1
+            	<if test="item.x != null and item.x != '' ">
+            		AND f.x = #{item.x}
+            	</if>
+            	<if test="item.x != null and item.y != '' ">
+            		AND f.y = #{item.y}
+            	</if>
+            	)
+		   	</foreach>
+		   	</if>
         Union
         select 
         	fd.id,
@@ -110,7 +123,7 @@
 			fd.q,
 			fd.su,
 			fd.av,
-			fd.attribute from half_time_details fd
+			fd.attribute from full_details fd
    		inner join
         (SELECT  realid,su,max(a)
 		FROM
@@ -118,7 +131,7 @@
             AND attribute = 0  GROUP BY realid,su ) AS T
 		 GROUP BY T.realid) as TT
 		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
-		
+		where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from full_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 	    ORDER BY t desc
 		<if test="havePage == 1">
 			LIMIT #{start}, #{rows}
@@ -143,6 +156,19 @@
         WHERE
         	f.live_score_id = #{live_score_id}
             AND f.attribute = 0
+            AND f.x &lt; (select IFNULL(min(ffd.x),100000)  from full_details ffd where ffd.t> f.t and ffd.live_score_id = f.live_score_id and ffd.realid = f.realid)
+            <if test="templist != null">
+            <foreach collection="templist" item="item" open=" and (" separator="or" close= ")"  index="index">
+            	(1=1
+            	<if test="item.x != null and item.x != '' ">
+            		AND f.x = #{item.x}
+            	</if>
+            	<if test="item.x != null and item.y != '' ">
+            		AND f.y = #{item.y}
+            	</if>
+            	)
+		   	</foreach>
+		   	</if>
         Union
         select 
         	fd.id,
@@ -154,7 +180,7 @@
 			fd.q,
 			fd.su,
 			fd.av,
-			fd.attribute from half_time_details fd
+			fd.attribute from full_details fd
    		inner join
         (SELECT  realid,su,max(a)
 		FROM
@@ -162,6 +188,7 @@
             AND attribute = 0  GROUP BY realid,su ) AS T
 		 GROUP BY T.realid) as TT
 		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		Where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from full_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 		) as TTT
 	</select>
 	
@@ -183,6 +210,19 @@
         WHERE
         	f.live_score_id = #{live_score_id}
             AND f.attribute = 0
+            AND f.x &lt; (select IFNULL(min(ffd.x),100000)  from half_time_details ffd where ffd.t> f.t and ffd.live_score_id = f.live_score_id and ffd.realid = f.realid)
+            <if test="templist != null">
+            <foreach collection="templist" item="item" open=" and (" separator="or" close= ")"  index="index">
+            	(1=1
+            	<if test="item.x != null and item.x != '' ">
+            		AND f.x = #{item.x}
+            	</if>
+            	<if test="item.x != null and item.y != '' ">
+            		AND f.y = #{item.y}
+            	</if>
+            	)
+		   	</foreach>
+		   	</if>
         Union
         select 
         	fd.id,
@@ -202,7 +242,7 @@
             AND attribute = 0  GROUP BY realid,su ) AS T
 		 GROUP BY T.realid) as TT
 		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
-		
+		where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from half_time_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 	    ORDER BY t desc
 		<if test="havePage == 1">
 			LIMIT #{start}, #{rows}
@@ -227,6 +267,19 @@
         WHERE
         	f.live_score_id = #{live_score_id}
             AND f.attribute = 0
+            AND f.x &lt; (select IFNULL(min(ffd.x),100000)  from half_time_details ffd where ffd.t> f.t and ffd.live_score_id = f.live_score_id and ffd.realid = f.realid)
+            <if test="templist != null">
+            <foreach collection="templist" item="item" open=" and (" separator="or" close= ")"  index="index">
+            	(1=1
+            	<if test="item.x != null and item.x != '' ">
+            		AND f.x = #{item.x}
+            	</if>
+            	<if test="item.x != null and item.y != '' ">
+            		AND f.y = #{item.y}
+            	</if>
+            	)
+		   	</foreach>
+		   	</if>
         Union
         select 
         	fd.id,
@@ -246,7 +299,10 @@
             AND attribute = 0  GROUP BY realid,su ) AS T
 		 GROUP BY T.realid) as TT
 		on fd.live_score_id = #{live_score_id} AND fd.attribute = 0 and fd.realid = TT.realid AND fd.su = TT.su
+		where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from half_time_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 		) as TTT
 	</select>
+	
+	
     
 </mapper>
