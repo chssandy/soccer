@@ -93,7 +93,10 @@
 			f.q,
 			f.su,
 			f.av,
-			f.attribute
+			f.attribute,
+			case when f.h = 1 then 'h'
+			     else 'a'
+			end as ha
         FROM 
 	    	full_details f
         WHERE
@@ -123,7 +126,11 @@
 			fd.q,
 			fd.su,
 			fd.av,
-			fd.attribute from full_details fd
+			fd.attribute, 
+			case when fd.h = 1 then 'h'
+			     else 'a'
+			end as ha
+		from full_details fd
    		inner join
         (SELECT  realid,su,max(a)
 		FROM
@@ -180,7 +187,8 @@
 			fd.q,
 			fd.su,
 			fd.av,
-			fd.attribute from full_details fd
+			fd.attribute
+		from full_details fd
    		inner join
         (SELECT  realid,su,max(a)
 		FROM
@@ -204,7 +212,10 @@
 			f.q,
 			f.su,
 			f.av,
-			f.attribute
+			f.attribute,
+			case when f.h = 1 then 'h'
+			     else 'a'
+			end as ha
         FROM 
 	    	half_time_details f
         WHERE
@@ -234,7 +245,11 @@
 			fd.q,
 			fd.su,
 			fd.av,
-			fd.attribute from half_time_details fd
+			fd.attribute,
+			case when fd.h = 1 then 'h'
+			     else 'a'
+			end as ha
+		from half_time_details fd
    		inner join
         (SELECT  realid,su,max(a)
 		FROM

@@ -23,6 +23,11 @@ public class DetailsBean {
 	private String h;
 	private String a;
 	private String attribute;
+	private String lightSixX;
+	private String lightEightX;
+	private String lightSixY;
+	private String lightEightY;
+	private String ha;
 	/**
 	 * @return the id
 	 */
@@ -178,6 +183,66 @@ public class DetailsBean {
 	 */
 	public void setLive_score_id(String live_score_id) {
 		this.live_score_id = live_score_id;
+	}
+	/**
+	 * @return the hA
+	 */
+	public String getHa() {
+		return ha;
+	}
+	/**
+	 * @param hA the hA to set
+	 */
+	public void setHa(String ha) {
+		this.ha = ha;
+	}
+	/**
+	 * @return the lightSixX
+	 */
+	public String getLightSixX() {
+		return lightSixX;
+	}
+	/**
+	 * @param lightSixX the lightSixX to set
+	 */
+	public void setLightSixX(String lightSixX) {
+		this.lightSixX = lightSixX;
+	}
+	/**
+	 * @return the lightEightX
+	 */
+	public String getLightEightX() {
+		return lightEightX;
+	}
+	/**
+	 * @param lightEightX the lightEightX to set
+	 */
+	public void setLightEightX(String lightEightX) {
+		this.lightEightX = lightEightX;
+	}
+	/**
+	 * @return the lightSixY
+	 */
+	public String getLightSixY() {
+		return lightSixY;
+	}
+	/**
+	 * @param lightSixY the lightSixY to set
+	 */
+	public void setLightSixY(String lightSixY) {
+		this.lightSixY = lightSixY;
+	}
+	/**
+	 * @return the lightEightY
+	 */
+	public String getLightEightY() {
+		return lightEightY;
+	}
+	/**
+	 * @param lightEightY the lightEightY to set
+	 */
+	public void setLightEightY(String lightEightY) {
+		this.lightEightY = lightEightY;
 	}
 
 }

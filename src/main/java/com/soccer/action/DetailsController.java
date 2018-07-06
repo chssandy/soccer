@@ -56,8 +56,9 @@ public class DetailsController extends BaseController
     		}
     		search.setTemplist(templist);
     	}
-    	
+    	search.setHavePage(0);
     	int count = detailsService.getDetailsCount(search);
+    	search.setRowCount(count);
         List<DetailsBean> list =null;
         if (count > 0)
         {

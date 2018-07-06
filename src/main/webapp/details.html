@@ -99,6 +99,8 @@
 		<h1>
 			<span class="header_button_span " >
 				<button class="btn btn-primary" id="search-button">筛选</button>&nbsp;&nbsp;
+				<button class="btn btn-primary" id="six-button">六点</button>&nbsp;&nbsp;
+				<button class="btn btn-primary" id="eight-button">八点</button>&nbsp;&nbsp;
 			</span>
 		</h1>
 	</div>
@@ -165,7 +167,7 @@
 		            postData: data,
 		            page: 1
 		        }).trigger("reloadGrid");
-		    })
+		    });
         	
 			pageInit();
 				
@@ -178,7 +180,7 @@
 			            live_score_id: live_score_id
 			        },
 					mtype: 'post',
-					colNames: ['实盘ID', '时间', '比分', '大球', '盘口', '小球','水位和值','平均值'],
+					colNames: ['实盘ID', '时间', '比分', '大球','全场|半场', '盘口', '小球','水位和值','平均值'],
 					regional: 'cn',
 					colModel: [{
 						name: 'realid',
@@ -199,8 +201,19 @@
 						name: 'x',
 						index: 'x',
 						width: 75,
-						sortable: false
+						sortable: false,
+						formatter: function(cellvalue, options, rowObject) {
+							return '<span '+
+								(rowObject.lightEightX == '1' ? 'eightpoint':'')+ ' ' +
+								(rowObject.lightSixX == '1' ? 'sixpoint':'')+
+						   		'>'+rowObject.x+'</span>';
+						}
 					}, {
+						name: 'ha',
+						index: 'ha',
+						width: 85,
+						sortable: false
+					},{
 						name: 'q',
 						index: 'q',
 						width: 90,
@@ -209,7 +222,13 @@
 						name: 'y',
 						index: 'y',
 						width: 90,
-						sortable: false
+						sortable: false,
+						formatter: function(cellvalue, options, rowObject) {
+							return '<span '+
+								(rowObject.lightEightY == '1' ? 'eightpoint':'')+ ' ' +
+								(rowObject.lightSixY == '1' ? 'sixpoint':'')+
+						   		'>'+rowObject.y+'</span>';
+						}
 					}, {
 						name: 'su',
 						index: 'su',
@@ -225,8 +244,8 @@
 			            id: "id",//设置返回参数中，表格ID的名字为manager_id
 			            repeatitems : false
 			        },
-					rowNum: 10,
-					rowList: [10, 20, 30],
+					rowNum: 1000,
+					rowList: [1000, 20, 30],
 					pager: '#pager',
 					viewrecords: true,
 					autowidth: true,
@@ -250,6 +269,16 @@
 					del: false
 				});
 			}
+	
+			$('#six-button').click(function () {
+			  $("#tables").find("span[eightpoint]").parent().css("background-color","");
+		      $("#tables").find("span[sixpoint]").parent().css("background-color","yellow");
+		      
+		    })
+		    $('#eight-button').click(function () {
+		     	$("#tables").find("span[sixpoint]").parent().css("background-color","");
+		      	$("#tables").find("span[eightpoint]").parent().css("background-color","yellow");
+		    })
 	})($);
 
     </script>
