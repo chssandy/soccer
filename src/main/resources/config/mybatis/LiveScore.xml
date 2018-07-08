@@ -27,7 +27,8 @@
 			    	AND event_date = #{event_date}
 			    	</when>
 	     			<otherwise>
-	     			AND event_date = (select event_date from live_score order by id desc limit 0,1)
+	     			AND event_date = (select event_date from live_score  where
+			is_resolved = #{is_resolved}  order by id desc limit 0,1)
      				</otherwise>
     			</choose>
 		    	<if test="league_name != null and league_name != ''">
@@ -56,7 +57,8 @@
 			    	AND event_date = #{event_date}
 			    	</when>
 	     			<otherwise>
-	     			AND event_date = (select event_date from live_score order by id desc limit 0,1)
+	     			AND event_date = (select event_date from live_score  where
+			is_resolved = #{is_resolved}  order by id desc limit 0,1)
      				</otherwise>
     			</choose>
 		    	<if test="league_name != null and league_name != ''">
