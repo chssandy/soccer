@@ -22,23 +22,25 @@
         	live_score 
         where
 				is_resolved = #{is_resolved} 
-				<choose>
-	    			<when  test="event_date != null and event_date != ''">
-			    	AND event_date = #{event_date}
-			    	</when>
-	     			<otherwise>
-	     			AND event_date = (select event_date from live_score  where
-			is_resolved = #{is_resolved}  order by id desc limit 0,1)
-     				</otherwise>
-    			</choose>
-		    	<if test="league_name != null and league_name != ''">
-                	AND league_name LIKE CONCAT('%',#{league_name},'%')
-	            </if>
-            	<if test="home_team != null and home_team != ''">
-                	AND home_team LIKE CONCAT('%',#{home_team},'%')
-	            </if>
-            	<if test="away_team != null and away_team != ''">
-                	AND away_team LIKE CONCAT('%',#{away_team},'%')
+				<if test="is_resolved == 1">
+					<choose>
+		    			<when  test="event_date != null and event_date != ''">
+				    	AND event_date = #{event_date}
+				    	</when>
+		     			<otherwise>
+		     			AND event_date = (select event_date from live_score  where
+				is_resolved = #{is_resolved}  order by id desc limit 0,1)
+	     				</otherwise>
+	    			</choose>
+			    	<if test="league_name != null and league_name != ''">
+	                	AND league_name LIKE CONCAT('%',#{league_name},'%')
+		            </if>
+	            	<if test="home_team != null and home_team != ''">
+	                	AND home_team LIKE CONCAT('%',#{home_team},'%')
+		            </if>
+	            	<if test="away_team != null and away_team != ''">
+	                	AND away_team LIKE CONCAT('%',#{away_team},'%')
+		            </if>
 	            </if>
 	    ORDER BY id DESC
 		<if test="havePage == 1">
@@ -52,24 +54,26 @@
         	live_score
         where
 			is_resolved = #{is_resolved} 
-			<choose>
-	    			<when  test="event_date != null and event_date != ''">
-			    	AND event_date = #{event_date}
-			    	</when>
-	     			<otherwise>
-	     			AND event_date = (select event_date from live_score  where
-			is_resolved = #{is_resolved}  order by id desc limit 0,1)
-     				</otherwise>
-    			</choose>
-		    	<if test="league_name != null and league_name != ''">
-                	AND league_name LIKE CONCAT('%',#{league_name},'%')
-	            </if>
-            	<if test="home_team != null and home_team != ''">
-                	AND home_team LIKE CONCAT('%',#{home_team},'%')
-	            </if>
-            	<if test="away_team != null and away_team != ''">
-                	AND away_team LIKE CONCAT('%',#{away_team},'%')
-	            </if>
+			<if test="is_resolved == 1">
+				<choose>
+		    			<when  test="event_date != null and event_date != ''">
+				    	AND event_date = #{event_date}
+				    	</when>
+		     			<otherwise>
+		     			AND event_date = (select event_date from live_score  where
+				is_resolved = #{is_resolved}  order by id desc limit 0,1)
+	     				</otherwise>
+	    			</choose>
+			    	<if test="league_name != null and league_name != ''">
+	                	AND league_name LIKE CONCAT('%',#{league_name},'%')
+		            </if>
+	            	<if test="home_team != null and home_team != ''">
+	                	AND home_team LIKE CONCAT('%',#{home_team},'%')
+		            </if>
+	            	<if test="away_team != null and away_team != ''">
+	                	AND away_team LIKE CONCAT('%',#{away_team},'%')
+		            </if>
+	         </if>
 	</select>
 	
 	<update id="resolveLiveScore" parameterType="LiveScoreBean">
