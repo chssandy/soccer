@@ -22,6 +22,9 @@
         	live_score 
         where
 				is_resolved = #{is_resolved} 
+				<if test="is_resolved == 0">
+					AND 0 = (select count(1) from full_details where live_score_id = id)
+				</if>
 				<if test="is_resolved == 1">
 					<choose>
 		    			<when  test="event_date != null and event_date != ''">
@@ -54,6 +57,9 @@
         	live_score
         where
 			is_resolved = #{is_resolved} 
+			<if test="is_resolved == 0">
+				AND 0 = (select count(1) from full_details where live_score_id = id)
+			</if>
 			<if test="is_resolved == 1">
 				<choose>
 		    			<when  test="event_date != null and event_date != ''">
