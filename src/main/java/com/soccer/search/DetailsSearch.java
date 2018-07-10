@@ -19,6 +19,8 @@ public class DetailsSearch extends Page {
 	 */
 	private static final long serialVersionUID = 6493164360996349680L;
 	
+	private String isselect;
+	
 	private String  type;
 	
 	private String live_score_id;
@@ -77,6 +79,20 @@ public class DetailsSearch extends Page {
 
 	public void setSu(String su) {
 		this.su = su;
+	}
+
+	/**
+	 * @return the isselect
+	 */
+	public String getIsselect() {
+		return isselect;
+	}
+
+	/**
+	 * @param isselect the isselect to set
+	 */
+	public void setIsselect(String isselect) {
+		this.isselect = isselect;
 	}
 
 }
