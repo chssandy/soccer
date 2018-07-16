@@ -160,7 +160,7 @@
 		where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from full_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 	    and fd.x &lt; (SELECT IFNULL(min(ffd.x), 100000) FROM full_details ffd WHERE ffd.t = fd.t AND ffd.live_score_id = fd.live_score_id AND ffd.realid = fd.realid
       				AND ffd.id &lt; fd.id )
-	    ORDER BY t DESC 
+	    ORDER BY t DESC ,id ASC
 		<if test="havePage == 1">
 			LIMIT #{start}, #{rows}
 		</if>
@@ -320,7 +320,7 @@
 		where fd.x &lt; (select IFNULL(min(ffd.x),100000)  from half_time_details ffd where ffd.t> fd.t and ffd.live_score_id = fd.live_score_id and ffd.realid = fd.realid)
 	    and fd.x &lt; (SELECT IFNULL(min(ffd.x), 100000) FROM full_details ffd WHERE ffd.t = fd.t AND ffd.live_score_id = fd.live_score_id AND ffd.realid = fd.realid
       				AND ffd.id &lt; fd.id )
-	    ORDER BY t DESC
+	    ORDER BY t DESC,id ASC
 		<if test="havePage == 1">
 			LIMIT #{start}, #{rows}
 		</if>
