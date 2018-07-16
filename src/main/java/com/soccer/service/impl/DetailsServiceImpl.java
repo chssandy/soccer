@@ -135,6 +135,20 @@ public class DetailsServiceImpl implements DetailsService{
 					}
 				}
 			}
+			list.get(tempTAXI).setLightEightX("1");
+			list.get(tempTAYI).setLightEightY("1");
+			list.get(tempAXI).setLightEightX("1");
+			list.get(tempAYI).setLightEightY("1");
+			list.get(tempTHXI).setLightEightX("1");
+			list.get(tempTHYI).setLightEightY("1");
+			list.get(tempHXI).setLightEightX("1");
+			list.get(tempHYI).setLightEightY("1");
+			
+			list.get(tempTAXI).setLightSixX("1");
+			list.get(tempAXI).setLightSixX("1");
+			list.get(tempTHXI).setLightSixX("1");
+			list.get(tempHXI).setLightSixX("1");
+			
 		}
 		return list;
 	}

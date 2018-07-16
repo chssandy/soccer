@@ -99,8 +99,8 @@
 		<h1>
 			<span class="header_button_span " >
 				<button class="btn btn-primary" id="search-button">筛选</button>&nbsp;&nbsp;
-				<button class="btn btn-primary" id="six-button">六点</button>&nbsp;&nbsp;
-				<button class="btn btn-primary" id="eight-button">八点</button>&nbsp;&nbsp;
+				<button class="btn btn-primary" id="six-button"  style="display:none">六点</button>&nbsp;&nbsp;
+				<button class="btn btn-primary" id="eight-button"  style="display:none">八点</button>&nbsp;&nbsp;
 			</span>
 		</h1>
 	</div>
@@ -154,6 +154,8 @@
 		    });
 		    
 		     $('#search-button').click(function () {
+		      $("#six-button").show();
+		      $("#eight-button").show();
 		      var data1 = $("#shaixuan").find("input").serializeObject();
 		      var data = {
 		                isselect : 1,
