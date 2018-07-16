@@ -173,7 +173,8 @@
 		    });
         	
 			pageInit();
-				
+			
+			var tempRealid;
 			function pageInit() {
 				$("#tables").jqGrid({
 					url: SERVER_URL + '/details/info?nd=' + new Date().getTime(),
@@ -189,7 +190,18 @@
 						name: 'realid',
 						index: 'realid',
 						width: 115,
-						sortable: false
+						sortable: false,
+						formatter: function(cellvalue, options, rowObject) {
+							if(!tempRealid){
+								tempRealid = cellvalue;
+							}else{
+								if(cellvalue != tempRealid){
+									tempRealid = cellvalue;
+									cellvalue = "<hr /><br />" + cellvalue;
+								}
+							}
+							return cellvalue;
+						}
 					}, {
 						name: 't',
 						index: 't',

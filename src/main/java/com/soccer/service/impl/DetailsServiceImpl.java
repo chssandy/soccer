@@ -44,8 +44,14 @@ public class DetailsServiceImpl implements DetailsService{
 			list = detailsDao.getHalfDetailsList(search);
 		}
 		if(list!=null){
-			String tempRealid="",tempT="",tempX="",tempY="",tempHA="";
-			int tempTAXI = 0, tempTAYI = 0,tempAXI = 0,tempAYI = 0,tempTHXI = 0,tempTHYI = 0,tempHXI = 0,tempHYI = 0; 
+			String tempRealid="",tempT="",tempHA="";
+			
+			Float tempY = null,temp_x_av = null,temp_y_av = null;   
+			    //临时y   临时x-av   临时y-av
+			int x_new = 0, y_new = 0,y_max =0,x_min_abs = 0,x_min = 0,      y_min_abs=0,      y_min=0;
+			   //x最近的行，        y最近的行；  y最大的行            x最接近av的行             x高于av最接近的行          y最接近av的行                        y高于av最接近的行
+			
+//			int tempTAXI = 0, tempTAYI = 0,tempAXI = 0,tempAYI = 0,tempTHXI = 0,tempTHYI = 0,tempHXI = 0,tempHYI = 0; 
 			//tempTAXI, tempTAYI,tempAXI,tempAYI,tempTHXI,tempTHYI,tempHXI,tempHYI ：
 			//全盘时间最大的大球，小球数据行；全盘大小球最接近均值；半盘时间最大的大球，小球数据行，半盘最接近均值的数据行
 			for(int i = 0; i<list.size();i++){
@@ -53,101 +59,109 @@ public class DetailsServiceImpl implements DetailsService{
 				if(i==0){
 					tempRealid = bean.getRealid();
 					tempT = bean.getT();
-					tempX = bean.getX();
-					tempY = bean.getY();
+					tempY = Float.valueOf(bean.getY());
+					temp_x_av = Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv()) ;
+					temp_y_av = Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv()) ;
 					tempHA = bean.getHa();
 				}else{
 					if(tempRealid.equals(bean.getRealid()) && tempHA.equals(bean.getHa())){
 						//TODO 组内比较,半场或全场比较
-						if("h".equals(bean.getHa())){  //半场判最接近平均值的x，即为判定最小的x；半场判最接近平均值的y，即为判定最大的y
-							if( Integer.valueOf(bean.getT()) > Integer.valueOf(tempT)){
-								tempTHXI = i;
-								tempTHYI = i;
+						if("h".equals(bean.getHa())){  //半盘判最接近平均值的x，绝对值最小；半盘判最接近平均值的y，即绝对值最小
+							if( Integer.valueOf(bean.getT()) > Integer.valueOf(tempT)){  //半盘取x最近的值（6点，8点）；取y最近的值（8点）
+								x_new = i;
+								y_new = i;
 								tempT = bean.getT();
 							}
-							if(Float.valueOf(tempX) > Float.valueOf(bean.getX())){
-								tempX = bean.getX();  //当前的x更小，则更新tempX
-								tempHXI = i;
+							if(Math.abs(temp_x_av) >  Math.abs(Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv())) ){
+								temp_x_av = Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv()) ;  //当前的abs(x-av)更小，则更新tempX,tempAV
+								x_min_abs = i;
 							}
-							if(Float.valueOf(tempY) < Float.valueOf(bean.getX())){
-								tempY = bean.getY();  //当前的y更大，则更新tempX
-								tempHYI = i;
+							if(Math.abs(temp_y_av) >  Math.abs(Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv())) ){
+								temp_y_av = Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv()) ;  //当前的abs(y-av)更小，则更新tempY,tempAV
+								y_min_abs = i;
 							}
-						}else{    //全场判最接近平均值的x，即为判定最大的x；全场判最接近平均值的y，即为判定最小的y
-							if( Integer.valueOf(bean.getT()) > Integer.valueOf(tempT)){
-								tempTAXI = i;
-								tempTAYI = i;
+						}else{    //全盘判最接近平均值的x，且x大于av；全盘判最接近平均值的y，且y大于av
+							if( Integer.valueOf(bean.getT()) > Integer.valueOf(tempT)){ //全盘取x最近的值（6点，8点）
+								x_new = i;
 								tempT = bean.getT();
 							}
-							if(Float.valueOf(tempX) < Float.valueOf(bean.getX())){
-								tempX = bean.getX();  //当前的x更小，则更新tempX
-								tempAXI = i;
+							if( Float.valueOf(bean.getY()) > tempY){ //全盘取y最大的值
+								y_max = i;
+								tempY = Float.valueOf(bean.getY());
 							}
-							if(Float.valueOf(tempY) > Float.valueOf(bean.getY())){
-								tempY = bean.getY();  //当前的x更小，则更新tempX
-								tempAYI = i;
+							//半盘取y最大的值（6点，8点） 
+							if( Float.valueOf(bean.getX()) > Float.valueOf(bean.getAv()) ){
+								if(temp_x_av < 0 || temp_x_av > (Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv()))){
+									temp_x_av = Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv());  //当前的x大于av且x-av 最小，则更新tempX
+									x_min = i;
+								}
+							}
+							if(Float.valueOf(bean.getY()) > Float.valueOf(bean.getAv())){
+								if(temp_y_av<0 || temp_y_av > (Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv()))){
+									temp_y_av = Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv()); 
+									y_min = i;
+								}
 							}
 						}
 					}else{
-						list.get(tempTAXI).setLightEightX("1");
-						list.get(tempTAYI).setLightEightY("1");
-						list.get(tempAXI).setLightEightX("1");
-						list.get(tempAYI).setLightEightY("1");
-						list.get(tempTHXI).setLightEightX("1");
-						list.get(tempTHYI).setLightEightY("1");
-						list.get(tempHXI).setLightEightX("1");
-						list.get(tempHYI).setLightEightY("1");
-						
-						list.get(tempTAXI).setLightSixX("1");
-						list.get(tempAXI).setLightSixX("1");
-						list.get(tempTHXI).setLightSixX("1");
-						list.get(tempHXI).setLightSixX("1");
-						
 						if("a".equals(tempHA)){
-							list.get(tempTAYI).setLightSixY("1");
-							list.get(tempAYI).setLightSixY("1");
+							list.get(x_new).setLightEightX("1");
+							list.get(x_min).setLightEightX("1");
+							list.get(y_max).setLightEightY("1");
+							list.get(y_min).setLightEightY("1");
+							
+							list.get(x_new).setLightSixX("1");
+							list.get(x_min).setLightSixX("1");
+							list.get(y_max).setLightSixY("1");
+							list.get(y_min).setLightSixY("1");
+						}else{
+							list.get(x_new).setLightEightX("1");
+							list.get(x_min_abs).setLightEightX("1");
+							list.get(y_new).setLightEightY("1");
+							list.get(y_min_abs).setLightEightY("1");
+							
+							list.get(x_new).setLightSixX("1");
+							list.get(x_min_abs).setLightSixX("1");
 						}
-						
-					/*	list.get(tempTI).setLightSixX("1");
-						list.get(tempXI).setLightEightX("1");
-						list.get(tempXI).setLightSixX("1");
-						list.get(tempTI).setLightEightY("1");
-						list.get(tempYI).setLightEightY("1");
-						if("a".equals(tempHA)){  //六点不需要半场小球的数据,只要全场的小球数据
-							list.get(tempTI).setLightSixY("1");
-							list.get(tempYI).setLightSixY("1");
-						}*/
 						//TODO 新启一组比较
 						tempRealid = bean.getRealid();
 						tempT = bean.getT();
-						tempX = bean.getX();
-						tempY = bean.getY();
+						tempY = Float.valueOf(bean.getY());
+						temp_x_av = Float.valueOf(bean.getX()) - Float.valueOf(bean.getAv()) ;
+						temp_y_av = Float.valueOf(bean.getY()) - Float.valueOf(bean.getAv()) ;
 						tempHA = bean.getHa();
 						
-						tempTAXI = i; 
-						tempTAYI = i;
-						tempAXI = i;
-						tempAYI = i;
-						tempTHXI = i;
-						tempTHYI = i;
-						tempHXI = i;
-						tempHYI = i; 
+						
+						x_new = i;
+						y_new = i;
+						y_max = i;
+						x_min_abs = i;
+						x_min = i;
+						y_min_abs= i;
+						y_min=i;
+						
 					}
 				}
 			}
-			list.get(tempTAXI).setLightEightX("1");
-			list.get(tempTAYI).setLightEightY("1");
-			list.get(tempAXI).setLightEightX("1");
-			list.get(tempAYI).setLightEightY("1");
-			list.get(tempTHXI).setLightEightX("1");
-			list.get(tempTHYI).setLightEightY("1");
-			list.get(tempHXI).setLightEightX("1");
-			list.get(tempHYI).setLightEightY("1");
-			
-			list.get(tempTAXI).setLightSixX("1");
-			list.get(tempAXI).setLightSixX("1");
-			list.get(tempTHXI).setLightSixX("1");
-			list.get(tempHXI).setLightSixX("1");
+			if("a".equals(tempHA)){
+				list.get(x_new).setLightEightX("1");
+				list.get(x_min).setLightEightX("1");
+				list.get(y_max).setLightEightY("1");
+				list.get(y_min).setLightEightY("1");
+				
+				list.get(x_new).setLightSixX("1");
+				list.get(x_min).setLightSixX("1");
+				list.get(y_max).setLightSixY("1");
+				list.get(y_min).setLightSixY("1");
+			}else{
+				list.get(x_new).setLightEightX("1");
+				list.get(x_min_abs).setLightEightX("1");
+				list.get(y_new).setLightEightY("1");
+				list.get(y_min_abs).setLightEightY("1");
+				
+				list.get(x_new).setLightSixX("1");
+				list.get(x_min_abs).setLightSixX("1");
+			}
 			
 		}
 		return list;
