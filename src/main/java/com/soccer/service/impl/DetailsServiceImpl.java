@@ -62,7 +62,7 @@ public class DetailsServiceImpl implements DetailsService{
 				tempT = bean.getT();
 				tempX = bean.getX();
 			}else{
-				if(tempRealid.equals(bean.getRealid()) && Integer.valueOf(bean.getT()) < Integer.valueOf(tempT) && Float.valueOf(bean.getX()) > Float.valueOf(tempX)) {
+				if(tempRealid.equals(bean.getRealid()) && Integer.valueOf(bean.getT()) <= Integer.valueOf(tempT) && Float.valueOf(bean.getX()) > Float.valueOf(tempX)) {
 					//相同实盘下，时间递减的情况下，只保留x也递减的数据
 					list.remove(bean);
 					i--;
